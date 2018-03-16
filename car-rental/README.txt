@@ -47,13 +47,13 @@ Query car details:
 curl -X GET http://localhost:8080/services/cars/2
 
 Book a car (This example run without error twice since two cars are available from this type):
-curl -X POST http://localhost:8080/services/cars/book -H "Content-Type: application/json" -d '{"customerName":"John Smith","customerAddress":"Kobago utca 3","customerID":"AXC","carId":5,"usage":"DOMESTIC","from":1521126720000,"to":1521133920000}'
+curl -X POST http://localhost:8080/services/cars/book -H "Content-Type: application/json" -d '{"customerName":"John Smith","customerAddress":"Kobago utca 3","customerID":"AXC","carId":5,"usage":"DOMESTIC","from":1529171700000,"to":1529430900000}'
 
 Book Lada for Russia (Accepts):
-curl -X POST http://localhost:8080/services/cars/book -H "Content-Type: application/json" -d '{"customerName":"John Smith","customerAddress":"Kobago utca 3","customerID":"AXC","carId":8,"usage":"FOREIGN","from":1521126720000,"to":1521133920000,"countryCode":"RU"}'
+curl -X POST http://localhost:8080/services/cars/book -H "Content-Type: application/json" -d '{"customerName":"John Smith","customerAddress":"Kobago utca 3","customerID":"AXC","carId":8,"usage":"FOREIGN","from":1529171700000,"to":1529430900000,"countries":["RU"]}'
 
 Book Lada for Germany (Rejects, Lada cannot be used in Germany)
-curl -X POST http://localhost:8080/services/cars/book -H "Content-Type: application/json" -d '{"customerName":"John Smith","customerAddress":"Kobago utca 3","customerID":"AXC","carId":8,"usage":"FOREIGN","from":1521126720000,"to":1521133920000,"countryCode":"DE"}'
+curl -X POST http://localhost:8080/services/cars/book -H "Content-Type: application/json" -d '{"customerName":"John Smith","customerAddress":"Kobago utca 3","customerID":"AXC","carId":8,"usage":"FOREIGN","from":1529171700000,"to":1529430900000,"countries":["RU","DE"]}'
 
 
 Access to application
