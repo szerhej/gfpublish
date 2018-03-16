@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<body ng-app="carApp" ng-controller="todoCtrl">
+
+<div class="jumbotron text-center">
+    <h1>Car Rental Application</h1>
+    <p>Please choose a car!</p>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4" ng-repeat="x in carList" ng-click="getDetails(x.id)" data-toggle="modal" data-target="#charDetails">
+            <h3>{{ x.make }}</h3>
+            <p>{{ x.version }}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="charDetails" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{{ carDetails.make }}  {{ carDetails.version }}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger" ng-show="errorMessage!=null">
+                    <strong>Error!</strong> {{errorMessage}}
+                </div>
+                <div class="alert alert-success" ng-show="message!=null">
+                    <strong>Success!</strong> {{message}}
+                </div>
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="classification">Classification:</label>
+                        <div class="col-sm-10">
+                            <input id="classification" type="label" class="form-control" style="width:150px" disabled="true" ng-model="carDetails.classification">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2 text-nowrap" for="bodyType">Body Type:</label>
+                        <div class="col-sm-10">
+                            <input id="bodyType" type="label" class="form-control" style="width:150px" disabled="true" ng-model="carDetails.bodyType">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="doors">Doors:</label>
+                        <div class="col-sm-10">
+                            <input id="doors" type="label" class="form-control" style="width:150px" disabled="true" ng-model="carDetails.doors">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="seats">Seats:</label>
+                        <div class="col-sm-10">
+                            <input id="seats" type="label" class="form-control" style="width:150px" disabled="true" ng-model="carDetails.seats">
+                        </div>
+                    </div>
+                    <div ng-show="bookingPanel">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="customerName">Customer Name:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="customerName" ng-model="bookingRecord.customerName" required="true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="customerAddress">Customer Address:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="customerAddress" ng-model="bookingRecord.customerAddress" required="true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="customerID">Customer ID:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="customerID" ng-model="bookingRecord.customerID" required="true">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2 text-nowrap" for="daterange">Date Range:</label>
+                            <div class="col-sm-10 input-group input-daterange" id="daterange">
+                                <div class="input-group-addon">from</div>
+                                <input type="datetime-local" placeholder="yyyy-MM-ddTHH:mm" class="form-control" style="width:210px" required ng-model="bookingRecord.from">
+                                <div class="input-group-addon">to</div>
+                                <input type="datetime-local" placeholder="yyyy-MM-ddTHH:mm" class="form-control"  style="width:210px"  required ng-model="bookingRecord.to">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2 text-nowrap" for="usage">Usage:</label>
+                            <div class="col-sm-10 input-group" id="usage">
+                                <div class="checkbox">
+                                    <label><input type="radio" value="DOMESTIC" ng-model="bookingRecord.usage">Domestic</label>
+                                    <label><input type="radio" value="FOREIGN" ng-model="bookingRecord.usage">Foreign</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-show="bookingRecord.usage=='FOREIGN'">
+                            <label class="control-label col-sm-2 text-nowrap" for="countries">Countries:</label>
+                            <div class="col-sm-10 input-group">
+                                <select id="countries" multiple ng-model="bookingRecord.countries">
+                                    <option ng-repeat="x in countryList" value="{{x.countryCode}}">{{x.countryName}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" ng-click="openBooking()" ng-hide="bookingPanel">Book</button>
+                <button type="button" class="btn" ng-show="bookingPanel" ng-hide="carBooked" ng-click="submitForm()">Submit</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+var app = angular.module('carApp', []);
+app.controller('todoCtrl', function($scope, $http) {
+
+$http.get("/services/cars").then(function (response) {
+      $scope.carList = response.data;
+  });
+$http.get("/services/countries").then(function (response) {
+      $scope.countryList = response.data;
+  });
+
+
+$scope.getDetails = function(carId) {
+    $scope.bookingPanel = false
+    $http.get("/services/cars/"+carId).then(function (response) {
+          $scope.carDetails = response.data;
+      });
+   };
+
+$scope.openBooking = function() {
+    $scope.carBooked = false
+    $scope.errorMessage = null
+    $scope.message = null
+    $scope.bookingPanel = true
+    $scope.bookingRecord= { }
+    $scope.bookingRecord.carId = $scope.carDetails.id
+    $scope.bookingRecord.usage = 'DOMESTIC'
+};
+
+$scope.submitForm = function() {
+    $scope.errorMessage = null
+    $scope.message = null
+
+    $http({
+      method  : 'POST',
+      url     : '/services/cars/book',
+      data    : $scope.bookingRecord,
+      headers : { 'Content-Type': 'application/json' }
+     })
+      .then(function(data) {
+          $scope.message = 'Car booked';
+          $scope.carBooked = true
+      },function(response) {
+        console.log(response);
+          $scope.errorMessage = response.data.message;
+      });
+    };
+
+
+});
+</script>
+
+</body>
+</html>

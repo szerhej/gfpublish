@@ -1,0 +1,104 @@
+{
+  "cars": [
+    {
+      "make": "BMW",
+      "model": "3-Series",
+      "version": "316i",
+      "classification": "Medium car",
+      "bodyType": "Saloon",
+      "doors": 4,
+      "seats": 5,
+      "num":2
+    },
+    {
+      "make": "Volkswagen",
+      "model": "Golf",
+      "version": "Golf 1.2 TSI BMT",
+      "classification": "Compact car",
+      "bodyType": "Hatchback",
+      "doors": 3,
+      "seats": 5,
+      "num":1
+    },
+    {
+      "make": "Honda",
+      "model": "Civic",
+      "version": "Civic 1.4",
+      "classification": "Medium car",
+      "bodyType": "Hatchback",
+      "doors": 5,
+      "seats": 5,
+      "num":3
+    },
+    {
+      "make": "Honda",
+      "model": "Civic",
+      "version": "Civic Tourer 1.8",
+      "classification": "Medium car",
+      "bodyType": "Estate",
+      "doors": 5,
+      "seats": 5,
+      "num":1
+    },
+    {
+      "make": "BMW",
+      "model": "4-Series",
+      "version": "425d Cabrio",
+      "classification": "Medium car",
+      "bodyType": "Cabrio",
+      "doors": 2,
+      "seats": 4,
+      "num":1
+    },
+    {
+      "make": "BMW",
+      "model": "4-Series",
+      "version": "420i Coupé",
+      "classification": "Medium car",
+      "bodyType": "Coupe",
+      "doors": 2,
+      "seats": 4,
+      "num":2
+    },
+    {
+      "make": "Volkswagen",
+      "model": "Golf",
+      "version": "Golf 1.0 TSI BMT",
+      "classification": "Compact car",
+      "bodyType": "Hatchback",
+      "doors": 5,
+      "seats": 5,
+      "num":1
+    },
+    {
+      "make": "Volkswagen",
+      "model": "Golf",
+      "version": "Golf 1.6 BlueTDI",
+      "classification": "Compact car",
+      "bodyType": "Hatchback",
+      "doors": 5,
+      "seats": 5,
+      "num":1
+    },
+    {
+      "make": "Lada",
+      "model": "Priora",
+      "version": "VAZ-2172 Coupé",
+      "classification": "Compact car",
+      "bodyType": "Hatchback",
+      "doors": 3,
+      "seats": 5,
+      "num":3
+    },
+    {
+      "make": "Lada",
+      "model": "Vesta",
+      "version": "VAZ-2182",
+      "classification": "Compact car",
+      "bodyType": "Estate",
+      "doors": 5,
+      "seats": 5,
+      "num":2
+    }
+  ]
+}
