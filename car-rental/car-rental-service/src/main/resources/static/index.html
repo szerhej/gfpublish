@@ -136,6 +136,8 @@ $scope.getDetails = function(carId) {
     $scope.bookingPanel = false
     $http.get("/services/cars/"+carId).then(function (response) {
           $scope.carDetails = response.data;
+            $scope.errorMessage = null
+            $scope.message = null
       });
    };
 

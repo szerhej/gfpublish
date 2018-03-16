@@ -6,7 +6,8 @@ On UI list of cars are displayed. Clicking on any of them it opens the car detai
 Activating the 'Book' button it changes the screen in edit mode.
 Filling the required fields the booking can be saved.
 One car type can be booked more times for the same period depending on how many cars are available from that type.
-In case of any errors error message is displayed. Message does not have error code but it can be extended.
+It only checks if the car is booked for period but does not give time for cleaning/maintenance process between bookings.
+In case of any errors error message is displayed. Message does not have error code (but it can be extended later).
 
 
 Build Application
@@ -37,10 +38,10 @@ mvn exec:exec
 Testing Web  Service
 -------------------------
 
-Query countries:
+Query available countries:
 curl -X GET http://localhost:8080/services/countries
 
-Query car list:
+Query available car list:
 curl -X GET http://localhost:8080/services/cars
 
 Query car details:
