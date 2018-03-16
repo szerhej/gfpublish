@@ -19,6 +19,9 @@ import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Car service to maintain data on service level
+ */
 @Service
 @Slf4j
 public class CarService {
@@ -133,12 +136,18 @@ public class CarService {
         //This list is not thread safe, cannot be accessed unsync way
         List<CarBooking> carBookings = carBookingMap.computeIfAbsent(carBooking.getCarId(), integer -> new ArrayList<>());
 
-        //sync on carBookings otherwise this process is not thread safe
+        //sync on carBookings list otherwise to make the process thread safe
         synchronized (carBookings) {
+            //Find all bookings for this car type for the defined period
             Collection<CarBooking> bookings = Collections2.filter(carBookings, carBooking1 -> carBooking.getCarId().equals(carBooking1.getCarId())
                     && carBooking.getFrom().getTime() <= carBooking1.getTo().getTime()
                     && carBooking1.getFrom().getTime() <= carBooking.getTo().getTime());
+
+            //This is the key part to check if the car is available
+            //Since there can be more cars from the same type it lets allocate more than one from a certain type
             Validator.isTrue(bookings.size() < carDetails.getNum(), "This car type is not available in this period!!!");
+
+            //Saves to booking database
             carBookings.add(carBooking);
             log.info("Car Booked:{} {}", carDetails, carBooking);
         }

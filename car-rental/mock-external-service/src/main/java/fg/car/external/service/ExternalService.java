@@ -5,6 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.TimeZone;
 
+/**
+ * Starts application
+ */
+
 @SpringBootApplication
 public class ExternalService {
     public static void main(String[] args) {

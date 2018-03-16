@@ -6,6 +6,9 @@ import org.slf4j.helpers.MessageFormatter;
 
 import java.util.List;
 
+/**
+ * Validator used by application to perform data validation
+ */
 @Slf4j
 public class Validator {
 

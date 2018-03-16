@@ -1,5 +1,9 @@
 package fg.dev;
 
+/**
+ * Application non-checked exception
+ * Used only for unexpected errors
+ */
 public class AppException extends RuntimeException {
     public AppException(String message) {
         super(message);

@@ -1,8 +1,19 @@
+Description
+-------------------------
+Demo application to model a car rental service.
+It does not have persistence layer. Stores all saved information in web service.
+On UI list of cars are displayed. Clicking on any of them it opens the car details.
+Activating the 'Book' button it changes the screen in edit mode.
+Filling the required fields the booking can be saved.
+One car type can be booked more times for the same period depending on how many cars are available from that type.
+In case of any errors error message is displayed. Message does not have error code but it can be extended.
+
+
 Build Application
 -------------------------
 
 cd car-rental/
-mvn install
+mvn clean install
 
 
 Start External Service
@@ -10,10 +21,6 @@ Start External Service
 Run fg.car.external.service.ExternalService
 
 With maven:
-
-Configuring jmx:
-export MAVEN_OPTS='-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9019 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false'
-
 
 cd mock-external-service/
 mvn exec:exec
