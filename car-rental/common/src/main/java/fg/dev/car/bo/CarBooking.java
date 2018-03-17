@@ -19,6 +19,10 @@ public class CarBooking {
      */
     private String customerAddress;
     /**
+     * Customer Email
+     */
+    private String customerEmail;
+    /**
      * ID code (Driving license/ID/Passport)
      */
     private String customerID;

@@ -11,6 +11,7 @@ import fg.dev.car.bo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,7 @@ public class CarService {
 
     /**
      * Initializes service database (countries/cars)
+     *
      * @throws Exception
      */
     @PostConstruct
@@ -57,6 +59,7 @@ public class CarService {
 
         //Load Countries
         countries = objectMapper.readValue(LangUtils.getResource("/countries.json"), Countries.class);
+        countries.getCountries().sort(Comparator.comparing(Country::getCountryCode));
 
         //Load Cars
         cars = objectMapper.readValue(LangUtils.getResource("/cars.json"), Cars.class);
@@ -70,6 +73,7 @@ public class CarService {
 
     /**
      * Returns all countries
+     *
      * @return
      */
     public List<Country> getCountries() {
@@ -78,6 +82,7 @@ public class CarService {
 
     /**
      * Returns all cars
+     *
      * @return
      */
     public List<Car> getCars() {
@@ -92,6 +97,7 @@ public class CarService {
 
     /**
      * Returns Car details defined by carId
+     *
      * @param carId
      * @return
      */
@@ -104,6 +110,7 @@ public class CarService {
     /**
      * Car booking service
      * It also validates the request
+     *
      * @param carBooking
      */
     public void book(CarBooking carBooking) {
@@ -112,8 +119,10 @@ public class CarService {
         Validator.notBlank(carBooking.getCustomerID(), "Customer ID is mandatory!!!");
         Validator.notNull(carBooking.getCarId(), "Car ID is mandatory!!!");
         Validator.notNull(carBooking.getUsage(), "Usage is mandatory!!!");
-        Validator.notNull(carBooking.getFrom(), "Period mandatory!!!");
-        Validator.notNull(carBooking.getTo(), "Period mandatory!!!");
+        Validator.notNull(carBooking.getFrom(), "Period is mandatory!!!");
+        Validator.notNull(carBooking.getTo(), "Period is mandatory!!!");
+        Validator.notNull(carBooking.getCustomerEmail(), "Email is mandatory!!!");
+        Validator.isTrue(EmailValidator.getInstance().isValid(carBooking.getCustomerEmail()), "Email is invalid!!!");
         Validator.isTrue(carBooking.getFrom().getTime() % (1000L * 60L) == 0, "Only minute is valid!!!");
         Validator.isTrue(carBooking.getTo().getTime() % (1000L * 60L) == 0, "Only minute is valid!!!");
         Validator.isTrue(carBooking.getTo().getTime() > carBooking.getFrom().getTime(), "Invalid Period");
@@ -130,8 +139,12 @@ public class CarService {
 
         CarDetails carDetails = cars.getCars().get(carBooking.getCarId());
 
+        //Validate if country codes are valid!!!
+        validateCountries(carBooking.getCountries());
+
+        //Validate if car can be used in all of these countries!!!
         Validator.isTrue(usage == Usage.DOMESTIC || usage == Usage.FOREIGN && externalServiceClient.isUsable(carDetails.getMake(), carBooking.getCountries()),
-                "This model cannot be used in the specified country!!!");
+                "This model cannot be used in all of the specified countries!!!");
 
         //This list is not thread safe, cannot be accessed unsync way
         List<CarBooking> carBookings = carBookingMap.computeIfAbsent(carBooking.getCarId(), integer -> new ArrayList<>());
@@ -150,6 +163,12 @@ public class CarService {
             //Saves to booking database
             carBookings.add(carBooking);
             log.info("Car Booked:{} {}", carDetails, carBooking);
+        }
+    }
+
+    private void validateCountries(List<String> countryCodes) {
+        if (countryCodes != null) {
+            countryCodes.forEach(countryCode -> Validator.notNull(countries.search(countryCode), "Unknown Country: {}!!! ", countryCode));
         }
     }
 
